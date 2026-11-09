@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -196,29 +198,37 @@ fun ExpenseTrackerScreen(dao: ExpenseDao) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("RECENT LOGS (Tap to delete)", color = Color.Gray, fontSize = 12.sp)
+        Text("RECENT LOGS", color = Color.Gray, fontSize = 12.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Expense History List
+        // Expense History List with Delete Icon Button
         val dateFormat = remember { SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault()) }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(expenses, key = { it.id }) { item ->
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF141B2D)),
-                    modifier = Modifier.fillMaxWidth().clickable {
-                        scope.launch { dao.delete(item) }
-                    }
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         modifier = Modifier.padding(14.dp).fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(item.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                             Text("${item.category} • ${dateFormat.format(Date(item.date))}", color = Color.Gray, fontSize = 12.sp)
                         }
                         Text("₹${item.amount}", color = Color(0xFF00F0FF), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        IconButton(onClick = {
+                            scope.launch { dao.delete(item) }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Expense",
+                                tint = Color(0xFFFF5555) // Cyber red tint for delete icon
+                            )
+                        }
                     }
                 }
             }
