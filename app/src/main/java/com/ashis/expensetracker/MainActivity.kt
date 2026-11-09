@@ -204,7 +204,7 @@ fun ExpenseTrackerScreen(dao: ExpenseDao) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(expenses, key = { it.id }) { item ->
                 Card(
-                    colors = CardDefaults.cardCards(containerColor = Color(0xFF141B2D)),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF141B2D)),
                     modifier = Modifier.fillMaxWidth().clickable {
                         scope.launch { dao.delete(item) }
                     }
